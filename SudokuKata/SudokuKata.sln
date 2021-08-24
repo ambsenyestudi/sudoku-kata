@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuKata", "SudokuKata\SudokuKata.csproj", "{BE348366-AAB5-4BFC-8346-3573B2233704}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuKata.Domain", "SudokuKata.Domain\SudokuKata.Domain.csproj", "{137EF810-66FB-484D-B8B4-4F68CAC0BAE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuKata.Test", "SudokuKata.Test\SudokuKata.Test.csproj", "{43E78AF2-CE53-4293-93E7-17AB75B3B126}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuKata.Client", "SudokuKata.Client\SudokuKata.Client.csproj", "{CE359D8A-1F38-420F-AF19-40B3FACB9E17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,12 +15,23 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BE348366-AAB5-4BFC-8346-3573B2233704}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BE348366-AAB5-4BFC-8346-3573B2233704}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BE348366-AAB5-4BFC-8346-3573B2233704}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BE348366-AAB5-4BFC-8346-3573B2233704}.Release|Any CPU.Build.0 = Release|Any CPU
+		{137EF810-66FB-484D-B8B4-4F68CAC0BAE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{137EF810-66FB-484D-B8B4-4F68CAC0BAE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{137EF810-66FB-484D-B8B4-4F68CAC0BAE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{137EF810-66FB-484D-B8B4-4F68CAC0BAE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43E78AF2-CE53-4293-93E7-17AB75B3B126}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43E78AF2-CE53-4293-93E7-17AB75B3B126}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43E78AF2-CE53-4293-93E7-17AB75B3B126}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43E78AF2-CE53-4293-93E7-17AB75B3B126}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE359D8A-1F38-420F-AF19-40B3FACB9E17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE359D8A-1F38-420F-AF19-40B3FACB9E17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE359D8A-1F38-420F-AF19-40B3FACB9E17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE359D8A-1F38-420F-AF19-40B3FACB9E17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {271F2951-4EB2-4E3E-81CE-F6216E1F19A4}
 	EndGlobalSection
 EndGlobal
