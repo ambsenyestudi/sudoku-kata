@@ -4,6 +4,7 @@ namespace SudokuKata.Domain.Boards
 {
     public record BoardDefinition
     {
+        public static int DEFAULT_SIZE = 9;
         public int Size { get; }
         public int SquareCount { get; }
 
@@ -20,5 +21,8 @@ namespace SudokuKata.Domain.Boards
             }
             return null;
         }
+
+        public static BoardDefinition Create() =>
+            Create(DEFAULT_SIZE);
     }
 }
