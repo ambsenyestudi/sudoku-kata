@@ -19,5 +19,11 @@ namespace SudokuKata.Test.Boards
             Assert.NotNull(sut);
         }
 
+        [Fact]
+        public void HavePositiveSize()
+        {
+            var sut = BoardDefinition.Create(2);
+            Assert.NotNull(sut);
+        }
     }
 }
