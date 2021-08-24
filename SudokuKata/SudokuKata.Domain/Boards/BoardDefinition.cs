@@ -14,6 +14,10 @@ namespace SudokuKata.Domain.Boards
         }
         public static BoardDefinition Create(int size)
         {
+            if(size<1)
+            {
+                throw new ArgumentException($"Invalid {nameof(size)} for {nameof(BoardDefinition)}");
+            }
             return null;
         }
     }
