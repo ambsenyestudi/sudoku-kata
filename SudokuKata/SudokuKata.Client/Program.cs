@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SudokuKata.Domain.Boards;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace SudokuKata.Client
     {
         static void Play()
         {
+            var boardDefintion = BoardDefinition.Create();
             #region Construct fully populated board
             // Prepare empty board
             string line = "+---+---+---+";
@@ -51,11 +53,11 @@ namespace SudokuKata.Client
             // - move - finds next candidate number at current pos and applies it to current state
             // - collapse - pops current state from stack as it did not yield a solution
             string command = "expand";
-            while (stateStack.Count <= 9 * 9)
+            while (stateStack.Count <= boardDefintion.SquareCount)
             {
                 if (command == "expand")
                 {
-                    int[] currentState = new int[9 * 9];
+                    int[] currentState = new int[boardDefintion.SquareCount];
 
                     if (stateStack.Count > 0)
                     {
@@ -73,24 +75,24 @@ namespace SudokuKata.Client
                         if (currentState[index] == 0)
                         {
 
-                            int row = index / 9;
-                            int col = index % 9;
+                            int row = index / boardDefintion.Size;
+                            int col = index % boardDefintion.Size;
                             int blockRow = row / 3;
                             int blockCol = col / 3;
 
-                            bool[] isDigitUsed = new bool[9];
+                            bool[] isDigitUsed = new bool[boardDefintion.Size];
 
-                            for (int i = 0; i < 9; i++)
+                            for (int i = 0; i < boardDefintion.Size; i++)
                             {
-                                int rowDigit = currentState[9 * i + col];
+                                int rowDigit = currentState[boardDefintion.Size * i + col];
                                 if (rowDigit > 0)
                                     isDigitUsed[rowDigit - 1] = true;
 
-                                int colDigit = currentState[9 * row + i];
+                                int colDigit = currentState[boardDefintion.Size * row + i];
                                 if (colDigit > 0)
                                     isDigitUsed[colDigit - 1] = true;
 
-                                int blockDigit = currentState[(blockRow * 3 + i / 3) * 9 + (blockCol * 3 + i % 3)];
+                                int blockDigit = currentState[(blockRow * 3 + i / 3) * boardDefintion.Size + (blockCol * 3 + i % 3)];
                                 if (blockDigit > 0)
                                     isDigitUsed[blockDigit - 1] = true;
                             } // for (i = 0..8)
@@ -153,10 +155,10 @@ namespace SudokuKata.Client
 
                     bool[] usedDigits = usedDigitsStack.Peek();
                     int[] currentState = stateStack.Peek();
-                    int currentStateIndex = 9 * rowToMove + colToMove;
+                    int currentStateIndex = boardDefintion.Size * rowToMove + colToMove;
 
                     int movedToDigit = digitToMove + 1;
-                    while (movedToDigit <= 9 && usedDigits[movedToDigit - 1])
+                    while (movedToDigit <= boardDefintion.Size && usedDigits[movedToDigit - 1])
                         movedToDigit += 1;
 
                     if (digitToMove > 0)
@@ -166,7 +168,7 @@ namespace SudokuKata.Client
                         board[rowToWrite][colToWrite] = '.';
                     }
 
-                    if (movedToDigit <= 9)
+                    if (movedToDigit <= boardDefintion.Size)
                     {
                         lastDigitStack.Push(movedToDigit);
                         usedDigits[movedToDigit - 1] = true;
@@ -198,20 +200,20 @@ namespace SudokuKata.Client
             int remainingDigits = 30;
             int maxRemovedPerBlock = 6;
             int[,] removedPerBlock = new int[3, 3];
-            int[] positions = Enumerable.Range(0, 9 * 9).ToArray();
+            int[] positions = Enumerable.Range(0, boardDefintion.SquareCount).ToArray();
             int[] state = stateStack.Peek();
 
             int[] finalState = new int[state.Length];
             Array.Copy(state, finalState, finalState.Length);
 
             int removedPos = 0;
-            while (removedPos < 9 * 9 - remainingDigits)
+            while (removedPos < boardDefintion.SquareCount - remainingDigits)
             {
                 int curRemainingDigits = positions.Length - removedPos;
                 int indexToPick = removedPos + rng.Next(curRemainingDigits);
 
-                int row = positions[indexToPick] / 9;
-                int col = positions[indexToPick] % 9;
+                int row = positions[indexToPick] / boardDefintion.Size;
+                int col = positions[indexToPick] % boardDefintion.Size;
 
                 int blockRowToRemove = row / 3;
                 int blockColToRemove = col / 3;
@@ -230,7 +232,7 @@ namespace SudokuKata.Client
 
                 board[rowToWrite][colToWrite] = '.';
 
-                int stateIndex = 9 * row + col;
+                int stateIndex = boardDefintion.Size * row + col;
                 state[stateIndex] = 0;
 
                 removedPos += 1;
@@ -248,7 +250,7 @@ namespace SudokuKata.Client
 
             Dictionary<int, int> maskToOnesCount = new Dictionary<int, int>();
             maskToOnesCount[0] = 0;
-            for (int i = 1; i < (1 << 9); i++)
+            for (int i = 1; i < (1 << boardDefintion.Size); i++)
             {
                 int smaller = i >> 1;
                 int increment = i & 1;
@@ -256,10 +258,10 @@ namespace SudokuKata.Client
             }
 
             Dictionary<int, int> singleBitToIndex = new Dictionary<int, int>();
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < boardDefintion.Size; i++)
                 singleBitToIndex[1 << i] = i;
 
-            int allOnes = (1 << 9) - 1;
+            int allOnes = (1 << boardDefintion.Size) - 1;
             #endregion
 
             bool changeMade = true;
@@ -274,17 +276,17 @@ namespace SudokuKata.Client
                     if (state[i] == 0)
                     {
 
-                        int row = i / 9;
-                        int col = i % 9;
+                        int row = i / boardDefintion.Size;
+                        int col = i % boardDefintion.Size;
                         int blockRow = row / 3;
                         int blockCol = col / 3;
 
                         int colidingNumbers = 0;
-                        for (int j = 0; j < 9; j++)
+                        for (int j = 0; j < boardDefintion.Size; j++)
                         {
-                            int rowSiblingIndex = 9 * row + j;
-                            int colSiblingIndex = 9 * j + col;
-                            int blockSiblingIndex = 9 * (blockRow * 3 + j / 3) + blockCol * 3 + j % 3;
+                            int rowSiblingIndex = boardDefintion.Size * row + j;
+                            int colSiblingIndex = boardDefintion.Size * j + col;
+                            int blockSiblingIndex = boardDefintion.Size * (blockRow * 3 + j / 3) + blockCol * 3 + j % 3;
 
                             int rowSiblingMask = 1 << (state[rowSiblingIndex] - 1);
                             int colSiblingMask = 1 << (state[colSiblingIndex] - 1);
@@ -301,30 +303,30 @@ namespace SudokuKata.Client
                 var rowsIndices = state
                     .Select((value, index) => new
                     {
-                        Discriminator = index / 9,
-                        Description = $"row #{index / 9 + 1}",
+                        Discriminator = index / boardDefintion.Size,
+                        Description = $"row #{index / boardDefintion.Size + 1}",
                         Index = index,
-                        Row = index / 9,
-                        Column = index % 9
+                        Row = index / boardDefintion.Size,
+                        Column = index % boardDefintion.Size
                     })
                     .GroupBy(tuple => tuple.Discriminator);
 
                 var columnIndices = state
                     .Select((value, index) => new
                     {
-                        Discriminator = 9 + index % 9,
-                        Description = $"column #{index % 9 + 1}",
+                        Discriminator = boardDefintion.Size + index % boardDefintion.Size,
+                        Description = $"column #{index % boardDefintion.Size + 1}",
                         Index = index,
-                        Row = index / 9,
-                        Column = index % 9
+                        Row = index / boardDefintion.Size,
+                        Column = index % boardDefintion.Size
                     })
                     .GroupBy(tuple => tuple.Discriminator);
 
                 var blockIndices = state
                     .Select((value, index) => new
                     {
-                        Row = index / 9,
-                        Column = index % 9,
+                        Row = index / boardDefintion.Size,
+                        Column = index % boardDefintion.Size,
                         Index = index
                     })
                     .Select(tuple => new
@@ -365,8 +367,8 @@ namespace SudokuKata.Client
                         int candidateMask = candidateMasks[singleCandidateIndex];
                         int candidate = singleBitToIndex[candidateMask];
 
-                        int row = singleCandidateIndex / 9;
-                        int col = singleCandidateIndex % 9;
+                        int row = singleCandidateIndex / boardDefintion.Size;
+                        int col = singleCandidateIndex % boardDefintion.Size;
 
                         int rowToWrite = row + row / 3 + 1;
                         int colToWrite = col + col / 3 + 1;
@@ -390,10 +392,10 @@ namespace SudokuKata.Client
                         List<int> candidateColIndices = new List<int>();
                         List<int> candidates = new List<int>();
 
-                        for (int digit = 1; digit <= 9; digit++)
+                        for (int digit = 1; digit <= boardDefintion.Size; digit++)
                         {
                             int mask = 1 << (digit - 1);
-                            for (int cellGroup = 0; cellGroup < 9; cellGroup++)
+                            for (int cellGroup = 0; cellGroup < boardDefintion.Size; cellGroup++)
                             {
                                 int rowNumberCount = 0;
                                 int indexInRow = 0;
@@ -404,13 +406,13 @@ namespace SudokuKata.Client
                                 int blockNumberCount = 0;
                                 int indexInBlock = 0;
 
-                                for (int indexInGroup = 0; indexInGroup < 9; indexInGroup++)
+                                for (int indexInGroup = 0; indexInGroup < boardDefintion.Size; indexInGroup++)
                                 {
-                                    int rowStateIndex = 9 * cellGroup + indexInGroup;
-                                    int colStateIndex = 9 * indexInGroup + cellGroup;
+                                    int rowStateIndex = boardDefintion.Size * cellGroup + indexInGroup;
+                                    int colStateIndex = boardDefintion.Size * indexInGroup + cellGroup;
                                     int blockRowIndex = (cellGroup / 3) * 3 + indexInGroup / 3;
                                     int blockColIndex = (cellGroup % 3) * 3 + indexInGroup % 3;
-                                    int blockStateIndex = blockRowIndex * 9 + blockColIndex;
+                                    int blockStateIndex = blockRowIndex * boardDefintion.Size + blockColIndex;
 
                                     if ((candidateMasks[rowStateIndex] & mask) != 0)
                                     {
@@ -472,7 +474,7 @@ namespace SudokuKata.Client
 
                             string message = $"{description} can contain {digit} only at ({row + 1}, {col + 1}).";
 
-                            int stateIndex = 9 * row + col;
+                            int stateIndex = boardDefintion.Size * row + col;
                             state[stateIndex] = digit;
                             candidateMasks[stateIndex] = 0;
                             board[rowToWrite][colToWrite] = (char)('0' + digit);
@@ -695,8 +697,8 @@ namespace SudokuKata.Client
                     {
                         if (maskToOnesCount[candidateMasks[i]] == 2)
                         {
-                            int row = i / 9;
-                            int col = i % 9;
+                            int row = i / boardDefintion.Size;
+                            int col = i % boardDefintion.Size;
                             int blockIndex = 3 * (row / 3) + col / 3;
 
                             int temp = candidateMasks[i];
@@ -716,8 +718,8 @@ namespace SudokuKata.Client
                             {
                                 if (candidateMasks[j] == candidateMasks[i])
                                 {
-                                    int row1 = j / 9;
-                                    int col1 = j % 9;
+                                    int row1 = j / boardDefintion.Size;
+                                    int col1 = j % boardDefintion.Size;
                                     int blockIndex1 = 3 * (row1 / 3) + col1 / 3;
 
                                     if (row == row1 || col == col1 || blockIndex == blockIndex1)
@@ -775,7 +777,7 @@ namespace SudokuKata.Client
                         {
                             if (command == "expand")
                             {
-                                int[] currentState = new int[9 * 9];
+                                int[] currentState = new int[boardDefintion.SquareCount];
 
                                 if (stateStack.Any())
                                 {
@@ -797,24 +799,24 @@ namespace SudokuKata.Client
                                     if (currentState[index] == 0)
                                     {
 
-                                        int row = index / 9;
-                                        int col = index % 9;
+                                        int row = index / boardDefintion.Size;
+                                        int col = index % boardDefintion.Size;
                                         int blockRow = row / 3;
                                         int blockCol = col / 3;
 
-                                        bool[] isDigitUsed = new bool[9];
+                                        bool[] isDigitUsed = new bool[boardDefintion.Size];
 
-                                        for (int i = 0; i < 9; i++)
+                                        for (int i = 0; i < boardDefintion.Size; i++)
                                         {
-                                            int rowDigit = currentState[9 * i + col];
+                                            int rowDigit = currentState[boardDefintion.Size * i + col];
                                             if (rowDigit > 0)
                                                 isDigitUsed[rowDigit - 1] = true;
 
-                                            int colDigit = currentState[9 * row + i];
+                                            int colDigit = currentState[boardDefintion.Size * row + i];
                                             if (colDigit > 0)
                                                 isDigitUsed[colDigit - 1] = true;
 
-                                            int blockDigit = currentState[(blockRow * 3 + i / 3) * 9 + (blockCol * 3 + i % 3)];
+                                            int blockDigit = currentState[(blockRow * 3 + i / 3) * boardDefintion.Size + (blockCol * 3 + i % 3)];
                                             if (blockDigit > 0)
                                                 isDigitUsed[blockDigit - 1] = true;
                                         } // for (i = 0..8)
@@ -880,10 +882,10 @@ namespace SudokuKata.Client
 
                                 bool[] usedDigits = usedDigitsStack.Peek();
                                 int[] currentState = stateStack.Peek();
-                                int currentStateIndex = 9 * rowToMove + colToMove;
+                                int currentStateIndex = boardDefintion.Size * rowToMove + colToMove;
 
                                 int movedToDigit = digitToMove + 1;
-                                while (movedToDigit <= 9 && usedDigits[movedToDigit - 1])
+                                while (movedToDigit <= boardDefintion.Size && usedDigits[movedToDigit - 1])
                                     movedToDigit += 1;
 
                                 if (digitToMove > 0)
@@ -893,7 +895,7 @@ namespace SudokuKata.Client
                                     board[rowToWrite][colToWrite] = '.';
                                 }
 
-                                if (movedToDigit <= 9)
+                                if (movedToDigit <= boardDefintion.Size)
                                 {
                                     lastDigitStack.Push(movedToDigit);
                                     usedDigits[movedToDigit - 1] = true;
@@ -931,20 +933,20 @@ namespace SudokuKata.Client
                         int index2 = stateIndex2.ElementAt(pos);
                         int digit1 = value1.ElementAt(pos);
                         int digit2 = value2.ElementAt(pos);
-                        int row1 = index1 / 9;
-                        int col1 = index1 % 9;
-                        int row2 = index2 / 9;
-                        int col2 = index2 % 9;
+                        int row1 = index1 / boardDefintion.Size;
+                        int col1 = index1 % boardDefintion.Size;
+                        int row2 = index2 / boardDefintion.Size;
+                        int col2 = index2 % boardDefintion.Size;
 
                         string description = string.Empty;
 
-                        if (index1 / 9 == index2 / 9)
+                        if (index1 / boardDefintion.Size == index2 / boardDefintion.Size)
                         {
-                            description = $"row #{index1 / 9 + 1}";
+                            description = $"row #{index1 / boardDefintion.Size + 1}";
                         }
-                        else if (index1 % 9 == index2 % 9)
+                        else if (index1 % boardDefintion.Size == index2 % boardDefintion.Size)
                         {
-                            description = $"column #{index1 % 9 + 1}";
+                            description = $"column #{index1 % boardDefintion.Size + 1}";
                         }
                         else
                         {
@@ -959,8 +961,8 @@ namespace SudokuKata.Client
 
                         for (int i = 0; i < state.Length; i++)
                         {
-                            int tempRow = i / 9;
-                            int tempCol = i % 9;
+                            int tempRow = i / boardDefintion.Size;
+                            int tempCol = i % boardDefintion.Size;
                             int rowToWrite = tempRow + tempRow / 3 + 1;
                             int colToWrite = tempCol + tempCol / 3 + 1;
 
