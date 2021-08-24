@@ -11,11 +11,13 @@ namespace SudokuKata.Test.Boards
         {
             Assert.Throws<ArgumentException>(()=> BoardDefinition.Create(0));
         }
+
         [Fact]
-        public void DefaultSize()
+        public void HaveDefaultSize()
         {
             var sut = BoardDefinition.Create();
             Assert.NotNull(sut);
         }
+
     }
 }
