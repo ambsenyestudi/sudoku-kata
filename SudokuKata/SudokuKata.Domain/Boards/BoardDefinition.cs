@@ -13,6 +13,16 @@ namespace SudokuKata.Domain.Boards
             Size = size;
             SquareCount = Size * Size;
         }
+
+        public int ToBoardIndex(int row, int column) =>
+            (row * Size) + column;
+
+        public (int, int) ToRowColumn(int index) =>
+            (index / Size, index % Size);
+
+        
+            
+
         public static BoardDefinition Create(int size)
         {
             if(size<1)

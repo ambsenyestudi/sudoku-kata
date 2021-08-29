@@ -70,8 +70,9 @@ namespace SudokuKata.Client
                     int bestCandidatesCount = -1;
                     int bestRandomValue = -1;
                     bool containsUnsolvableCells = false;
-
-                    for (int index = 0; index < currentState.Length; index++)
+                    //loops and acts only on empty positions
+                    for (
+                        int index = 0; index < currentState.Length; index++)
                         if (currentState[index] == 0)
                         {
 
@@ -82,16 +83,24 @@ namespace SudokuKata.Client
 
                             bool[] isDigitUsed = new bool[boardDefintion.Size];
 
+                            //checks if number placed
                             for (int i = 0; i < boardDefintion.Size; i++)
                             {
-                                int rowDigit = currentState[boardDefintion.Size * i + col];
+                                var rowIndex = boardDefintion.ToBoardIndex(i, col);
+
+                                //int rowIndex = boardDefintion.Size * i + col;
+                                int rowDigit = currentState[rowIndex];
                                 if (rowDigit > 0)
                                     isDigitUsed[rowDigit - 1] = true;
 
-                                int colDigit = currentState[boardDefintion.Size * row + i];
+                                int colIndex = boardDefintion.ToBoardIndex(row, i);
+                                //int colIndex = boardDefintion.Size * row + i;
+                                //this is not acurate his caclucations ar iffy
+                                int colDigit = currentState[colIndex];
                                 if (colDigit > 0)
                                     isDigitUsed[colDigit - 1] = true;
 
+                                //todo calculate blog index
                                 int blockDigit = currentState[(blockRow * 3 + i / 3) * boardDefintion.Size + (blockCol * 3 + i % 3)];
                                 if (blockDigit > 0)
                                     isDigitUsed[blockDigit - 1] = true;
@@ -808,14 +817,19 @@ namespace SudokuKata.Client
 
                                         for (int i = 0; i < boardDefintion.Size; i++)
                                         {
-                                            int rowDigit = currentState[boardDefintion.Size * i + col];
+                                            //review all squares in current row
+                                            int rowIndex = boardDefintion.Size * i + col;
+                                            int rowDigit = currentState[rowIndex];
                                             if (rowDigit > 0)
                                                 isDigitUsed[rowDigit - 1] = true;
 
-                                            int colDigit = currentState[boardDefintion.Size * row + i];
+                                            //review all squares in current column
+                                            int colIndex = boardDefintion.Size * row + i;
+                                            int colDigit = currentState[colIndex];
                                             if (colDigit > 0)
                                                 isDigitUsed[colDigit - 1] = true;
 
+                                            //todo how to figure block
                                             int blockDigit = currentState[(blockRow * 3 + i / 3) * boardDefintion.Size + (blockCol * 3 + i % 3)];
                                             if (blockDigit > 0)
                                                 isDigitUsed[blockDigit - 1] = true;
