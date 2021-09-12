@@ -13,6 +13,11 @@ namespace SudokuKata.Rules.Domain.Common
 
         public SquareCollection Add(Square square)
         {
+            if(square == Square.Empty)
+            {
+                return this;
+            }
+
             var valueList = new List<int>(squareValues);
             valueList.Add(square.Value);
 

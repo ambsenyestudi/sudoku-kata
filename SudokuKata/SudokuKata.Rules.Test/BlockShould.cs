@@ -15,7 +15,13 @@ namespace SudokuKata.Rules.Test
             Assert.True(sut.IsEmpty());
         }
 
-        
+        [Fact]
+        public void RemainsEmptyWhenEmptySquareAdde()
+        {
+            var sut = new Block();
+            sut.Add(Square.Empty);
+            Assert.True(sut.IsEmpty());
+        }
 
         [Fact]
         public void NotBeEmptyWithOneSquare()
