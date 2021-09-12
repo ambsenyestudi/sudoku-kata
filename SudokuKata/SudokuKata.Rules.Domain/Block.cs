@@ -9,14 +9,15 @@ namespace SudokuKata.Rules.Domain
     {
         private readonly List<Square> squares = new List<Square>();
 
-        public bool IsEmpty()
-        {
-            return !squares.Any();
-        }
+        public bool IsEmpty() =>
+            !squares.Any();
 
         public void Add(Square square)
         {
             squares.Add(square);
         }
+
+        public bool IsFull() =>
+            squares.Count == Square.MAX_VALUE;
     }
 }

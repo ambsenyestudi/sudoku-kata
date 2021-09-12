@@ -3,7 +3,7 @@
     public record Square
     {
         private const int MIN_VALUE = 1;
-        private const int MAX_VALUE = 9;
+        public const int MAX_VALUE = 9;
         public static Square Empty { get; } = new Square(0);
         public int Value { get; }
         private Square(int value) => Value = value;
