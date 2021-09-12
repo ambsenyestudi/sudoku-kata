@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuKata", "SudokuKata\SudokuKata.csproj", "{BE348366-AAB5-4BFC-8346-3573B2233704}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuKata.Rules.Domain", "SudokuKata.Rules.Domain\SudokuKata.Rules.Domain.csproj", "{4A91540D-0590-4456-B6D0-04FA3F17BECB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuKata.Rules.Test", "SudokuKata.Rules.Test\SudokuKata.Rules.Test.csproj", "{CF2EB9F6-D88F-41BF-B272-E90F383B19BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +19,19 @@ Global
 		{BE348366-AAB5-4BFC-8346-3573B2233704}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE348366-AAB5-4BFC-8346-3573B2233704}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE348366-AAB5-4BFC-8346-3573B2233704}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A91540D-0590-4456-B6D0-04FA3F17BECB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A91540D-0590-4456-B6D0-04FA3F17BECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A91540D-0590-4456-B6D0-04FA3F17BECB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A91540D-0590-4456-B6D0-04FA3F17BECB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF2EB9F6-D88F-41BF-B272-E90F383B19BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF2EB9F6-D88F-41BF-B272-E90F383B19BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF2EB9F6-D88F-41BF-B272-E90F383B19BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF2EB9F6-D88F-41BF-B272-E90F383B19BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2AE9143B-34EF-4D6E-82A7-48B80774CE7D}
 	EndGlobalSection
 EndGlobal
