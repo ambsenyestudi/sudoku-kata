@@ -14,6 +14,10 @@ namespace SudokuKata.Rules.Domain
 
         public void Add(Square square)
         {
+            if(squares.Contains(square))
+            {
+                throw new ArgumentException();
+            }
             squares.Add(square);
         }
 

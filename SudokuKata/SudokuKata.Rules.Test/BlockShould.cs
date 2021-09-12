@@ -1,5 +1,6 @@
 using SudokuKata.Rules.Domain;
 using SudokuKata.Rules.Domain.Common;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -32,6 +33,18 @@ namespace SudokuKata.Rules.Test
                 sut.Add(Square.Create(i + 1));
             }
             Assert.True(sut.IsFull());
+        }
+
+        [Fact]
+        public void NotHaveRepatedValues()
+        {
+            var squareValue = 5;
+            var square = Square.Create(squareValue);
+            var sut = new Block();
+            sut.Add(square);
+            var repeatedSquare = Square.Create(squareValue);
+            
+            Assert.Throws<ArgumentException>(()=> sut.Add(repeatedSquare));
         }
     }
 }
