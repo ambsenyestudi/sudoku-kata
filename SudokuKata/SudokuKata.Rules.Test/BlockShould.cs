@@ -15,6 +15,8 @@ namespace SudokuKata.Rules.Test
             Assert.True(sut.IsEmpty());
         }
 
+        
+
         [Fact]
         public void NotBeEmptyWithOneSquare()
         {

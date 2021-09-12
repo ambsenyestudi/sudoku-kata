@@ -1,27 +1,25 @@
 ﻿using SudokuKata.Rules.Domain.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SudokuKata.Rules.Domain
 {
     public class Block
     {
-        private readonly List<Square> squares = new List<Square>();
+        private SquareCollection squareCollection = SquareCollection.Empty;
 
         public bool IsEmpty() =>
-            !squares.Any();
+            squareCollection == SquareCollection.Empty;
 
         public void Add(Square square)
         {
-            if(squares.Contains(square))
+            if(squareCollection.Contains(square))
             {
                 throw new ArgumentException();
             }
-            squares.Add(square);
+            squareCollection = squareCollection.Add(square);
         }
 
         public bool IsFull() =>
-            squares.Count == Square.MAX_VALUE;
+            squareCollection.IsFull();
     }
 }
