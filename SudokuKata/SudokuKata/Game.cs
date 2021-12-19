@@ -244,9 +244,10 @@ namespace SudokuKata
 
                 removedPos += 1;
             }
-
-            Console.WriteLine();
-            Console.WriteLine("Starting look of the board to solve:");
+            outputService.Print(
+                string.Empty,
+                "Starting look of the board to solve:"
+                );
             Console.WriteLine(string.Join("\n", board.Select(s => new string(s)).ToArray()));
             #endregion
 
