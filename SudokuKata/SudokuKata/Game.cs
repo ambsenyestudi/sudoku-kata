@@ -990,7 +990,8 @@ namespace SudokuKata
                 if (changeMade)
                 {
                     #region Print the board as it looks after one change was made to it
-                    Console.WriteLine(string.Join(Environment.NewLine, board.Select(s => new string(s)).ToArray()));
+                    outputService.Print(
+                        string.Join(Environment.NewLine, board.Select(s => new string(s)).ToArray()));
                     string code =
                         string.Join(string.Empty, board.Select(s => new string(s)).ToArray())
                             .Replace("-", string.Empty)

@@ -107,6 +107,7 @@ namespace SudokuKata.Acceptance.Test
                 string.Empty),
                 Times.Once);
         }
+
         [Theory]
         [InlineData("Code: 000006009056780000009100406031000805000012000600508007017265948002000030060000000")]
         [InlineData("Code: 000006009056780000009100406031000805000012000604508007017265948002000030060000000")]
@@ -170,6 +171,75 @@ namespace SudokuKata.Acceptance.Test
                 string.Empty),
                 Times.Once);
         }
-
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        public void Present_Current_Board_As(int outputIndex)
+        {
+            var expected = play_outputs[outputIndex];
+            var zeroSeed = 0;
+            var sut = new Game(
+                outputServiceMock.Object,
+                randomServiceMock.Object);
+            randomServiceMock.Setup(x => x.Next()).Returns(zeroSeed);
+            var random = new Random(5);
+            randomServiceMock.Setup(x => x.Next(It.IsAny<int>()))
+                .Returns((int i) => random.Next(i));
+            sut.Play();
+            outputServiceMock
+                .Verify(x => x.Print(expected),
+                Times.Once);
+        }
+        /*
+         +---+---+---+
+        |...|..6|..9|
+    |.56|78.|...|
+    |..9|1..|4.6|
+    +---+---+---+
+    |.31|...|8.5|
+    |...|.12|...|
+    |6..|5.8|..7|
+    +---+---+---+
+    |.17|265|948|
+    |..2|...|.3.|
+    |.6.|...|...|
+    +---+---+---+
+         */
+        private string[] play_outputs = new string[]
+        {
+            string.Join(Environment.NewLine,
+                new string[]{
+                    "+---+---+---+",
+                    "|...|..6|..9|",
+                    "|.56|78.|...|",
+                    "|..9|1..|4.6|",
+                    "+---+---+---+",
+                    "|.31|...|8.5|",
+                    "|...|.12|...|",
+                    "|6..|5.8|..7|",
+                    "+---+---+---+",
+                    "|.17|265|948|",
+                    "|..2|...|.3.|",
+                    "|.6.|...|...|",
+                    "+---+---+---+"
+                }),
+            string.Join(Environment.NewLine,
+                new string[]{
+                    "+---+---+---+",
+                    "|...|..6|..9|",
+                    "|.56|78.|...|",
+                    "|..9|1..|4.6|",
+                    "+---+---+---+",
+                    "|.31|...|8.5|",
+                    "|...|.12|...|",
+                    "|6..|5.8|..7|",
+                    "+---+---+---+",
+                    "|.17|265|948|",
+                    "|..2|...|.3.|",
+                    "|.6.|...|...|",
+                    "+---+---+---+"
+                }),
+        };
     }
+
 }
