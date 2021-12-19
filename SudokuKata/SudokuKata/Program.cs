@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SudokuKata.Domain.Boards;
+using System;
 
 namespace SudokuKata
 {
@@ -8,7 +9,8 @@ namespace SudokuKata
         {
             var randomService = new RandomService();
             var outputService = new OutputService();
-            var game = new Game(outputService, randomService);
+            var gameBoard = new Board();
+            var game = new Game(gameBoard, outputService, randomService);
             game.Play();
 
             Console.WriteLine();

@@ -1,4 +1,5 @@
 using Moq;
+using SudokuKata.Domain.Boards;
 using System;
 using Xunit;
 
@@ -8,7 +9,7 @@ namespace SudokuKata.Acceptance.Test
     {
         private readonly Mock<IOutputService> outputServiceMock;
         private readonly Mock<IRandomService> randomServiceMock;
-
+        private readonly Board BOARD = new Board();
         public GameShould()
         {
             outputServiceMock = new Mock<IOutputService>();
@@ -18,6 +19,7 @@ namespace SudokuKata.Acceptance.Test
         public void Start_As()
         {
             var sut = new Game(
+                BOARD,
                 outputServiceMock.Object,
                 randomServiceMock.Object);
             randomServiceMock.Setup(x => x.Next()).Returns(new Random().Next());
@@ -34,6 +36,7 @@ namespace SudokuKata.Acceptance.Test
         public void Present_Start_Board_As()
         {
             var sut = new Game(
+                BOARD,
                 outputServiceMock.Object,
                 randomServiceMock.Object);
             randomServiceMock.Setup(x => x.Next()).Returns(new Random().Next());
@@ -79,6 +82,7 @@ namespace SudokuKata.Acceptance.Test
                 "+---+---+---+";
             var zeroSeed = 0;
             var sut = new Game(
+                BOARD,
                 outputServiceMock.Object,
                 randomServiceMock.Object);
             randomServiceMock.Setup(x => x.Next()).Returns(zeroSeed);
@@ -95,6 +99,7 @@ namespace SudokuKata.Acceptance.Test
         {
             var expected = new string('=', 80);
             var sut = new Game(
+                BOARD,
                 outputServiceMock.Object,
                 randomServiceMock.Object);
             randomServiceMock.Setup(x => x.Next()).Returns(new Random().Next());
@@ -159,6 +164,7 @@ namespace SudokuKata.Acceptance.Test
         public void Have_Expected_Play_Codes(string expected)
         {
             var sut = new Game(
+                BOARD,
                 outputServiceMock.Object,
                 randomServiceMock.Object);
             randomServiceMock.Setup(x => x.Next()).Returns(0);
@@ -180,6 +186,7 @@ namespace SudokuKata.Acceptance.Test
             var expected = play_outputs[outputIndex];
             var zeroSeed = 0;
             var sut = new Game(
+                BOARD,
                 outputServiceMock.Object,
                 randomServiceMock.Object);
             randomServiceMock.Setup(x => x.Next()).Returns(zeroSeed);

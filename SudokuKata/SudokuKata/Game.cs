@@ -9,38 +9,24 @@ namespace SudokuKata
 {
     public class Game
     {
+        private readonly Board gameBoard;
         private readonly IOutputService outputService;
         private readonly IRandomService randomService;
 
         public Game(
+            Board gameBoard,
             IOutputService outputService,
             IRandomService randomService)
         {
+            this.gameBoard = gameBoard;
             this.outputService = outputService;
             this.randomService = randomService;
         }
         public void Play()
         {
             #region Construct fully populated board
-            // Prepare empty board
-            string line = "+---+---+---+";
-            string middle = "|...|...|...|";
-            char[][] board = new char[][]
-            {
-                line.ToCharArray(),
-                middle.ToCharArray(),
-                middle.ToCharArray(),
-                middle.ToCharArray(),
-                line.ToCharArray(),
-                middle.ToCharArray(),
-                middle.ToCharArray(),
-                middle.ToCharArray(),
-                line.ToCharArray(),
-                middle.ToCharArray(),
-                middle.ToCharArray(),
-                middle.ToCharArray(),
-                line.ToCharArray()
-            };
+
+            char[][] board = gameBoard.GetBoard();
 
             // Construct board to be solved
 
