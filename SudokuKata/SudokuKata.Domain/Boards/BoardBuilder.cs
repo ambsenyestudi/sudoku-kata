@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace SudokuKata
+namespace SudokuKata.Domain.Boards
 {
     public class BoardBuilder
     {
