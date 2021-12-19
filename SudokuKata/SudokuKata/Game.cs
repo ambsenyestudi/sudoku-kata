@@ -200,7 +200,9 @@ namespace SudokuKata
                 string.Empty,
                 "Final look of the solved board:");
             outputService.Print(
-                string.Join(Environment.NewLine, board.Select(s => new string(s)).ToArray())
+                new BoardBuilder()
+                    .WithRows(board)
+                    .Build()                
                 );
             #endregion
 
@@ -252,7 +254,9 @@ namespace SudokuKata
                 "Starting look of the board to solve:"
                 );
             outputService.Print(
-                string.Join("\n", board.Select(s => new string(s)).ToArray()));
+                new BoardBuilder()
+                    .WithRows(board)
+                    .Build());
             #endregion
 
             #region Prepare lookup structures that will be used in further execution
@@ -996,7 +1000,9 @@ namespace SudokuKata
                 {
                     #region Print the board as it looks after one change was made to it
                     outputService.Print(
-                        string.Join(Environment.NewLine, board.Select(s => new string(s)).ToArray()));
+                        new BoardBuilder()
+                            .WithRows(board)
+                            .Build());
                     string code =
                         string.Join(string.Empty, board.Select(s => new string(s)).ToArray())
                             .Replace("-", string.Empty)

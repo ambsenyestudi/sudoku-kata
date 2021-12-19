@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoardBuilder.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="IOutputService.cs" />
     <Compile Include="IRandomService.cs" />

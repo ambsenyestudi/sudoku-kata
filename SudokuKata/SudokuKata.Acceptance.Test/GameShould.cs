@@ -174,6 +174,7 @@ namespace SudokuKata.Acceptance.Test
         [Theory]
         [InlineData(0)]
         [InlineData(1)]
+        [InlineData(2)]
         public void Present_Current_Board_As(int outputIndex)
         {
             var expected = play_outputs[outputIndex];
@@ -190,23 +191,24 @@ namespace SudokuKata.Acceptance.Test
                 .Verify(x => x.Print(expected),
                 Times.Once);
         }
-        /*
-         +---+---+---+
-        |...|..6|..9|
-    |.56|78.|...|
-    |..9|1..|4.6|
-    +---+---+---+
-    |.31|...|8.5|
-    |...|.12|...|
-    |6..|5.8|..7|
-    +---+---+---+
-    |.17|265|948|
-    |..2|...|.3.|
-    |.6.|...|...|
-    +---+---+---+
-         */
         private string[] play_outputs = new string[]
         {
+            string.Join(Environment.NewLine,
+                new string[]{
+                    "+---+---+---+",
+                    "|123|456|789|",
+                    "|456|789|123|",
+                    "|789|123|456|",
+                    "+---+---+---+",
+                    "|231|674|895|",
+                    "|875|912|364|",
+                    "|694|538|217|",
+                    "+---+---+---+",
+                    "|317|265|948|",
+                    "|542|897|631|",
+                    "|968|341|572|",
+                    "+---+---+---+"
+                }),
             string.Join(Environment.NewLine,
                 new string[]{
                     "+---+---+---+",
@@ -218,7 +220,7 @@ namespace SudokuKata.Acceptance.Test
                     "|...|.12|...|",
                     "|6..|5.8|..7|",
                     "+---+---+---+",
-                    "|.17|265|948|",
+                    "|.17|265|94.|",
                     "|..2|...|.3.|",
                     "|.6.|...|...|",
                     "+---+---+---+"
