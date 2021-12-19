@@ -9,10 +9,14 @@ namespace SudokuKata
     public class Game
     {
         private readonly IOutputService outputService;
+        private readonly IRandomService randomService;
 
-        public Game(IOutputService outputService)
+        public Game(
+            IOutputService outputService,
+            IRandomService randomService)
         {
             this.outputService = outputService;
+            this.randomService = randomService;
         }
         public void Play()
         {
@@ -38,7 +42,6 @@ namespace SudokuKata
             };
 
             // Construct board to be solved
-            Random rng = new Random();
 
             // Top element is current state of the board
             Stack<int[]> stateStack = new Stack<int[]>();
@@ -110,7 +113,7 @@ namespace SudokuKata
                                 break;
                             }
 
-                            int randomValue = rng.Next();
+                            int randomValue = randomService.Next();
 
                             if (bestCandidatesCount < 0 ||
                                 candidatesCount < bestCandidatesCount ||
@@ -217,7 +220,7 @@ namespace SudokuKata
             while (removedPos < 9 * 9 - remainingDigits)
             {
                 int curRemainingDigits = positions.Length - removedPos;
-                int indexToPick = removedPos + rng.Next(curRemainingDigits);
+                int indexToPick = removedPos + randomService.Next(curRemainingDigits);
 
                 int row = positions[indexToPick] / 9;
                 int col = positions[indexToPick] % 9;
@@ -370,7 +373,7 @@ namespace SudokuKata
 
                     if (singleCandidateIndices.Length > 0)
                     {
-                        int pickSingleCandidateIndex = rng.Next(singleCandidateIndices.Length);
+                        int pickSingleCandidateIndex = randomService.Next(singleCandidateIndices.Length);
                         int singleCandidateIndex = singleCandidateIndices[pickSingleCandidateIndex];
                         int candidateMask = candidateMasks[singleCandidateIndex];
                         int candidate = singleBitToIndex[candidateMask];
@@ -472,7 +475,7 @@ namespace SudokuKata
 
                         if (candidates.Count > 0)
                         {
-                            int index = rng.Next(candidates.Count);
+                            int index = randomService.Next(candidates.Count);
                             string description = groupDescriptions.ElementAt(index);
                             int row = candidateRowIndices.ElementAt(index);
                             int col = candidateColIndices.ElementAt(index);
@@ -837,7 +840,7 @@ namespace SudokuKata
                                             break;
                                         }
 
-                                        int randomValue = rng.Next();
+                                        int randomValue = randomService.Next();
 
                                         if (bestCandidatesCount < 0 ||
                                             candidatesCount < bestCandidatesCount ||
@@ -936,7 +939,7 @@ namespace SudokuKata
 
                     if (stateIndex1.Any())
                     {
-                        int pos = rng.Next(stateIndex1.Count());
+                        int pos = randomService.Next(stateIndex1.Count());
                         int index1 = stateIndex1.ElementAt(pos);
                         int index2 = stateIndex2.ElementAt(pos);
                         int digit1 = value1.ElementAt(pos);
