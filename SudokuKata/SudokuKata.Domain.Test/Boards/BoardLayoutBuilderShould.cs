@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SudokuKata.Domain.Boards;
+﻿using SudokuKata.Domain.Boards;
 using Xunit;
 
 namespace SudokuKata.Domain.Test.Boards
@@ -15,6 +10,31 @@ namespace SudokuKata.Domain.Test.Boards
         {
             var sut = new BoardLayoutBuilder();
             Assert.Equal(new char[][] { }, sut.Build());
+        }
+        [Fact]
+        public void Have_Blocks_And_Separator()
+        {
+            var exptected = new char[][]
+               {
+                    "+---+---+---+".ToCharArray(),
+                    "|...|...|...|".ToCharArray(),
+                    "|...|...|...|".ToCharArray(),
+                    "|...|...|...|".ToCharArray(),
+                    "+---+---+---+".ToCharArray(),
+                    "|...|...|...|".ToCharArray(),
+                    "|...|...|...|".ToCharArray(),
+                    "|...|...|...|".ToCharArray(),
+                    "+---+---+---+".ToCharArray(),
+                    "|...|...|...|".ToCharArray(),
+                    "|...|...|...|".ToCharArray(),
+                    "|...|...|...|".ToCharArray(),
+                    "+---+---+---+".ToCharArray(),
+               };
+            var sut = new BoardLayoutBuilder()
+                .WithBlocks("|...|...|...|", "|...|...|...|", "|...|...|...|");
+            var actual = sut.Build();
+           
+            Assert.Equal(exptected, actual);
         }
     }
 }
