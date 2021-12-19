@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SudokuKata.Domain.Randomizing;
+using System;
 
 namespace SudokuKata
 {

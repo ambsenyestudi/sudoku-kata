@@ -1,4 +1,4 @@
-﻿namespace SudokuKata
+﻿namespace SudokuKata.Domain.Randomizing
 {
     public interface IRandomService
     {

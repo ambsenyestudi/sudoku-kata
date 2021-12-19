@@ -1,5 +1,6 @@
 using Moq;
 using SudokuKata.Domain.Boards;
+using SudokuKata.Domain.Randomizing;
 using System;
 using Xunit;
 
