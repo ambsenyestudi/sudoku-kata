@@ -8,6 +8,12 @@ namespace SudokuKata
 {
     public class Game
     {
+        private readonly IOutputService outputService;
+
+        public Game(IOutputService outputService)
+        {
+            this.outputService = outputService;
+        }
         public void Play()
         {
             #region Construct fully populated board
@@ -187,10 +193,12 @@ namespace SudokuKata
                 } // if (command == "move")
 
             }
-
-            Console.WriteLine();
-            Console.WriteLine("Final look of the solved board:");
-            Console.WriteLine(string.Join(Environment.NewLine, board.Select(s => new string(s)).ToArray()));
+            outputService.Print( 
+                string.Empty,
+                "Final look of the solved board:");
+            outputService.Print(
+                string.Join(Environment.NewLine, board.Select(s => new string(s)).ToArray())
+                );
             #endregion
 
             #region Generate inital board from the completely solved one
