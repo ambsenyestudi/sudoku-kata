@@ -1,4 +1,5 @@
 ﻿using SudokuKata.Domain.Boards;
+using SudokuKata.Domain.Randomizing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,18 +10,16 @@ namespace SudokuKata
 {
     public class Game
     {
-        private readonly IOutputService outputService;
         private readonly IRandomService randomService;
 
         public Game(
-            IOutputService outputService,
             IRandomService randomService)
         {
-            this.outputService = outputService;
             this.randomService = randomService;
         }
-        public void Play()
+        public List<string> Play()
         {
+            List<string> output = new List<string>();
             #region Construct fully populated board
             // Prepare empty board
             string line = "+---+---+---+";
@@ -197,14 +196,11 @@ namespace SudokuKata
                 } // if (command == "move")
 
             }
-            outputService.Print( 
-                string.Empty,
-                "Final look of the solved board:");
-            outputService.Print(
-                new BoardBuilder()
+            output.Add(string.Empty);
+            output.Add("Final look of the solved board:");
+            output.Add(new BoardBuilder()
                     .WithRows(board)
-                    .Build()                
-                );
+                    .Build());
             #endregion
 
             #region Generate inital board from the completely solved one
@@ -250,20 +246,18 @@ namespace SudokuKata
 
                 removedPos += 1;
             }
-            outputService.Print(
-                string.Empty,
-                "Starting look of the board to solve:"
-                );
-            outputService.Print(
+            output.Add(string.Empty);
+            output.Add("Starting look of the board to solve:");
+            output.Add(
                 new BoardBuilder()
                     .WithRows(board)
                     .Build());
             #endregion
 
             #region Prepare lookup structures that will be used in further execution
-            outputService.Print(string.Empty,
-                new string('=', 80),
-                string.Empty);
+            output.Add(string.Empty);
+            output.Add(new string('=', 80));
+            output.Add(string.Empty);
 
             Dictionary<int, int> maskToOnesCount = new Dictionary<int, int>();
             maskToOnesCount[0] = 0;
@@ -395,11 +389,11 @@ namespace SudokuKata
                         candidateMasks[singleCandidateIndex] = 0;
                         changeMade = true;
 
-                        outputService.Print(
+                        output.Add(
                             string.Format(
-                            "({0}, {1}) can only contain {2}.", 
-                            row + 1, 
-                            col + 1, 
+                            "({0}, {1}) can only contain {2}.",
+                            row + 1,
+                            col + 1,
                             candidate + 1));
                     }
 
@@ -502,7 +496,7 @@ namespace SudokuKata
                             board[rowToWrite][colToWrite] = (char)('0' + digit);
 
                             changeMade = true;
-                            outputService.Print(message);
+                            output.Add(message);
                         }
                     }
 
@@ -565,7 +559,7 @@ namespace SudokuKata
                                         value += 1;
                                     }
 
-                                    outputService.Print(
+                                    output.Add(
                                         $"Values {lower} and {upper} in {group.Description} are in cells ({maskCells[0].Row + 1}, {maskCells[0].Column + 1}) and ({maskCells[1].Row + 1}, {maskCells[1].Column + 1}).");
 
                                     foreach (var cell in cells)
@@ -584,7 +578,7 @@ namespace SudokuKata
                                         }
 
                                         string valuesReport = string.Join(", ", valuesToRemove.ToArray());
-                                        outputService.Print($"{valuesReport} cannot appear in ({cell.Row + 1}, {cell.Column + 1}).");
+                                        output.Add($"{valuesReport} cannot appear in ({cell.Row + 1}, {cell.Column + 1}).");
 
                                         candidateMasks[cell.Index] &= ~group.Mask;
                                         stepChangeMade = true;
@@ -662,7 +656,7 @@ namespace SudokuKata
 
                                 message.Append(" and other values cannot appear in those cells.");
 
-                                outputService.Print(message.ToString());
+                                output.Add(message.ToString());
                             }
 
                             foreach (var cell in groupWithNMasks.CellsWithMask)
@@ -691,7 +685,7 @@ namespace SudokuKata
                                 }
 
                                 message.Append($" cannot appear in cell ({cell.Row + 1}, {cell.Column + 1}).");
-                                outputService.Print(message.ToString());
+                                output.Add(message.ToString());
 
                             }
                         }
@@ -992,7 +986,7 @@ namespace SudokuKata
                                 board[rowToWrite][colToWrite] = (char)('0' + state[i]);
                         }
 
-                        outputService.Print($"Guessing that {digit1} and {digit2} are arbitrary in {description} (multiple solutions): Pick {finalState[index1]}->({row1 + 1}, {col1 + 1}), {finalState[index2]}->({row2 + 1}, {col2 + 1}).");
+                        output.Add($"Guessing that {digit1} and {digit2} are arbitrary in {description} (multiple solutions): Pick {finalState[index1]}->({row1 + 1}, {col1 + 1}), {finalState[index2]}->({row2 + 1}, {col2 + 1}).");
                     }
                 }
                 #endregion
@@ -1000,7 +994,7 @@ namespace SudokuKata
                 if (changeMade)
                 {
                     #region Print the board as it looks after one change was made to it
-                    outputService.Print(
+                    output.Add(
                         new BoardBuilder()
                             .WithRows(board)
                             .Build());
@@ -1011,13 +1005,15 @@ namespace SudokuKata
                             .Replace("|", string.Empty)
                             .Replace(".", "0");
 
-                    outputService.Print(
-                        string.Format("Code: {0}", code),
-                        string.Empty);
-                    
+                    output.Add(string.Format("Code: {0}", code));
+                    output.Add(string.Empty);
+
                     #endregion
                 }
+
+
             }
+            return output;
         }
     }
 }
