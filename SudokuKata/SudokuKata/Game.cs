@@ -255,9 +255,9 @@ namespace SudokuKata
             #endregion
 
             #region Prepare lookup structures that will be used in further execution
-            Console.WriteLine();
-            Console.WriteLine(new string('=', 80));
-            Console.WriteLine();
+            outputService.Print(string.Empty,
+                new string('=', 80),
+                string.Empty);
 
             Dictionary<int, int> maskToOnesCount = new Dictionary<int, int>();
             maskToOnesCount[0] = 0;

@@ -81,7 +81,7 @@ namespace SudokuKata.Acceptance.Test
             var sut = new Game(
                 outputServiceMock.Object,
                 randomServiceMock.Object);
-            randomServiceMock.Setup(x => x.Next()).Returns(new Random(zeroSeed).Next());
+            randomServiceMock.Setup(x => x.Next()).Returns(zeroSeed);
             randomServiceMock.Setup(x => x.Next(It.IsAny<int>()))
                 .Returns((int i) => new Random().Next(i));
             sut.Play();
@@ -89,5 +89,24 @@ namespace SudokuKata.Acceptance.Test
                 .Verify(x => x.Print(exptected),
                 Times.Once);
         }
+        
+        [Fact]
+        public void Have_separator()
+        {
+            var expected = new string('=', 80);
+            var sut = new Game(
+                outputServiceMock.Object,
+                randomServiceMock.Object);
+            randomServiceMock.Setup(x => x.Next()).Returns(new Random().Next());
+            randomServiceMock.Setup(x => x.Next(It.IsAny<int>()))
+                .Returns((int i) => new Random().Next(i));
+            sut.Play();
+            outputServiceMock
+                .Verify(x => x.Print(string.Empty,
+                expected,
+                string.Empty),
+                Times.Once);
+        }
+
     }
 }
