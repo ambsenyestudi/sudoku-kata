@@ -251,7 +251,8 @@ namespace SudokuKata
                 string.Empty,
                 "Starting look of the board to solve:"
                 );
-            Console.WriteLine(string.Join("\n", board.Select(s => new string(s)).ToArray()));
+            outputService.Print(
+                string.Join("\n", board.Select(s => new string(s)).ToArray()));
             #endregion
 
             #region Prepare lookup structures that will be used in further execution
@@ -389,7 +390,12 @@ namespace SudokuKata
                         candidateMasks[singleCandidateIndex] = 0;
                         changeMade = true;
 
-                        Console.WriteLine("({0}, {1}) can only contain {2}.", row + 1, col + 1, candidate + 1);
+                        outputService.Print(
+                            string.Format(
+                            "({0}, {1}) can only contain {2}.", 
+                            row + 1, 
+                            col + 1, 
+                            candidate + 1));
                     }
 
                     #endregion
@@ -491,8 +497,7 @@ namespace SudokuKata
                             board[rowToWrite][colToWrite] = (char)('0' + digit);
 
                             changeMade = true;
-
-                            Console.WriteLine(message);
+                            outputService.Print(message);
                         }
                     }
 
@@ -555,7 +560,7 @@ namespace SudokuKata
                                         value += 1;
                                     }
 
-                                    Console.WriteLine(
+                                    outputService.Print(
                                         $"Values {lower} and {upper} in {group.Description} are in cells ({maskCells[0].Row + 1}, {maskCells[0].Column + 1}) and ({maskCells[1].Row + 1}, {maskCells[1].Column + 1}).");
 
                                     foreach (var cell in cells)
@@ -574,7 +579,7 @@ namespace SudokuKata
                                         }
 
                                         string valuesReport = string.Join(", ", valuesToRemove.ToArray());
-                                        Console.WriteLine($"{valuesReport} cannot appear in ({cell.Row + 1}, {cell.Column + 1}).");
+                                        outputService.Print($"{valuesReport} cannot appear in ({cell.Row + 1}, {cell.Column + 1}).");
 
                                         candidateMasks[cell.Index] &= ~group.Mask;
                                         stepChangeMade = true;
@@ -652,7 +657,7 @@ namespace SudokuKata
 
                                 message.Append(" and other values cannot appear in those cells.");
 
-                                Console.WriteLine(message.ToString());
+                                outputService.Print(message.ToString());
                             }
 
                             foreach (var cell in groupWithNMasks.CellsWithMask)
@@ -681,7 +686,7 @@ namespace SudokuKata
                                 }
 
                                 message.Append($" cannot appear in cell ({cell.Row + 1}, {cell.Column + 1}).");
-                                Console.WriteLine(message.ToString());
+                                outputService.Print(message.ToString());
 
                             }
                         }
@@ -982,7 +987,7 @@ namespace SudokuKata
                                 board[rowToWrite][colToWrite] = (char)('0' + state[i]);
                         }
 
-                        Console.WriteLine($"Guessing that {digit1} and {digit2} are arbitrary in {description} (multiple solutions): Pick {finalState[index1]}->({row1 + 1}, {col1 + 1}), {finalState[index2]}->({row2 + 1}, {col2 + 1}).");
+                        outputService.Print($"Guessing that {digit1} and {digit2} are arbitrary in {description} (multiple solutions): Pick {finalState[index1]}->({row1 + 1}, {col1 + 1}), {finalState[index2]}->({row2 + 1}, {col2 + 1}).");
                     }
                 }
                 #endregion
