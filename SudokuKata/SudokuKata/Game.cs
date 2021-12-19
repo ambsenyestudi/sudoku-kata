@@ -998,8 +998,10 @@ namespace SudokuKata
                             .Replace("|", string.Empty)
                             .Replace(".", "0");
 
-                    Console.WriteLine("Code: {0}", code);
-                    Console.WriteLine();
+                    outputService.Print(
+                        string.Format("Code: {0}", code),
+                        string.Empty);
+                    
                     #endregion
                 }
             }
