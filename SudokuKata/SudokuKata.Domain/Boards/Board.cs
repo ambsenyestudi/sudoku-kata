@@ -194,5 +194,51 @@ namespace SudokuKata.Domain.Boards
             }
             return squares;
         }
+        public char[][] GenerateInitialBoardFrom(int[] state,
+            int[] finalState,
+            char[][] squares,
+            Stack<int[]> stateStack,
+            IRandomService randomService)
+        {
+            int remainingDigits = 30;
+            int maxRemovedPerBlock = 6;
+            int[,] removedPerBlock = new int[3, 3];
+            int[] positions = Enumerable.Range(0, 9 * 9).ToArray();
+
+            Array.Copy(state, finalState, finalState.Length);
+
+            int removedPos = 0;
+            while (removedPos < 9 * 9 - remainingDigits)
+            {
+                int curRemainingDigits = positions.Length - removedPos;
+                int indexToPick = removedPos + randomService.Next(curRemainingDigits);
+
+                int row = positions[indexToPick] / 9;
+                int col = positions[indexToPick] % 9;
+
+                int blockRowToRemove = row / 3;
+                int blockColToRemove = col / 3;
+
+                if (removedPerBlock[blockRowToRemove, blockColToRemove] >= maxRemovedPerBlock)
+                    continue;
+
+                removedPerBlock[blockRowToRemove, blockColToRemove] += 1;
+
+                int temp = positions[removedPos];
+                positions[removedPos] = positions[indexToPick];
+                positions[indexToPick] = temp;
+
+                int rowToWrite = row + row / 3 + 1;
+                int colToWrite = col + col / 3 + 1;
+
+                squares[rowToWrite][colToWrite] = '.';
+
+                int stateIndex = 9 * row + col;
+                state[stateIndex] = 0;
+
+                removedPos += 1;
+            }
+            return squares;
+        }
     }
 }

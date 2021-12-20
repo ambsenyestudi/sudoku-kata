@@ -51,48 +51,12 @@ namespace SudokuKata
             #endregion
 
             #region Generate inital board from the completely solved one
-            // Board is solved at this point.
-            // Now pick subset of digits as the starting position.
-            int remainingDigits = 30;
-            int maxRemovedPerBlock = 6;
-            int[,] removedPerBlock = new int[3, 3];
-            int[] positions = Enumerable.Range(0, 9 * 9).ToArray();
+            
+
+            // this is the solved game
             int[] state = stateStack.Peek();
-
             int[] finalState = new int[state.Length];
-            Array.Copy(state, finalState, finalState.Length);
-
-            int removedPos = 0;
-            while (removedPos < 9 * 9 - remainingDigits)
-            {
-                int curRemainingDigits = positions.Length - removedPos;
-                int indexToPick = removedPos + randomService.Next(curRemainingDigits);
-
-                int row = positions[indexToPick] / 9;
-                int col = positions[indexToPick] % 9;
-
-                int blockRowToRemove = row / 3;
-                int blockColToRemove = col / 3;
-
-                if (removedPerBlock[blockRowToRemove, blockColToRemove] >= maxRemovedPerBlock)
-                    continue;
-
-                removedPerBlock[blockRowToRemove, blockColToRemove] += 1;
-
-                int temp = positions[removedPos];
-                positions[removedPos] = positions[indexToPick];
-                positions[indexToPick] = temp;
-
-                int rowToWrite = row + row / 3 + 1;
-                int colToWrite = col + col / 3 + 1;
-
-                board[rowToWrite][colToWrite] = '.';
-
-                int stateIndex = 9 * row + col;
-                state[stateIndex] = 0;
-
-                removedPos += 1;
-            }
+            board = gameBoard.GenerateInitialBoardFrom(state, finalState, board, stateStack, randomService);
             output.Add(string.Empty);
             output.Add("Starting look of the board to solve:");
             output.Add(
@@ -117,8 +81,10 @@ namespace SudokuKata
 
             Dictionary<int, int> singleBitToIndex = new Dictionary<int, int>();
             for (int i = 0; i < 9; i++)
-                singleBitToIndex[1 << i] = i;
-
+            {
+                var currIndex = 1 << i;
+                singleBitToIndex[currIndex] = i;
+            }
             int allOnes = (1 << 9) - 1;
             #endregion
 
@@ -158,44 +124,9 @@ namespace SudokuKata
                 #endregion
 
                 #region Build a collection (named cellGroups) which maps cell indices into distinct groups (rows/columns/blocks)
-                var rowsIndices = state
-                    .Select((value, index) => new
-                    {
-                        Discriminator = index / 9,
-                        Description = $"row #{index / 9 + 1}",
-                        Index = index,
-                        Row = index / 9,
-                        Column = index % 9
-                    })
-                    .GroupBy(tuple => tuple.Discriminator);
-
-                var columnIndices = state
-                    .Select((value, index) => new
-                    {
-                        Discriminator = 9 + index % 9,
-                        Description = $"column #{index % 9 + 1}",
-                        Index = index,
-                        Row = index / 9,
-                        Column = index % 9
-                    })
-                    .GroupBy(tuple => tuple.Discriminator);
-
-                var blockIndices = state
-                    .Select((value, index) => new
-                    {
-                        Row = index / 9,
-                        Column = index % 9,
-                        Index = index
-                    })
-                    .Select(tuple => new
-                    {
-                        Discriminator = 18 + 3 * (tuple.Row / 3) + tuple.Column / 3,
-                        Description = $"block ({tuple.Row / 3 + 1}, {tuple.Column / 3 + 1})",
-                        Index = tuple.Index,
-                        Row = tuple.Row,
-                        Column = tuple.Column
-                    })
-                    .GroupBy(tuple => tuple.Discriminator);
+                var rowsIndices = new RowIndexesBuilder(state).Build();
+                var columnIndices = new ColumnIndexesBuilder(state).Build();
+                var blockIndices = new BlockIndexesBuilder(state).Build();
 
                 var cellGroups = rowsIndices.Concat(columnIndices).Concat(blockIndices).ToList();
                 #endregion
