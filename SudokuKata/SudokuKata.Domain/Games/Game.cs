@@ -105,19 +105,9 @@ namespace SudokuKata
                         int blockRow = row / 3;
                         int blockCol = col / 3;
 
-                        int colidingNumbers = 0;
-                        for (int j = 0; j < 9; j++)
-                        {
-                            int rowSiblingIndex = 9 * row + j;
-                            int colSiblingIndex = 9 * j + col;
-                            int blockSiblingIndex = 9 * (blockRow * 3 + j / 3) + blockCol * 3 + j % 3;
+                        var solver = new ColidingNumbersSolver(row, col, blockRow, blockCol);   
 
-                            int rowSiblingMask = 1 << (state[rowSiblingIndex] - 1);
-                            int colSiblingMask = 1 << (state[colSiblingIndex] - 1);
-                            int blockSiblingMask = 1 << (state[blockSiblingIndex] - 1);
-
-                            colidingNumbers = colidingNumbers | rowSiblingMask | colSiblingMask | blockSiblingMask;
-                        }
+                        int colidingNumbers = solver.CalculateColidingNumbers(state);
 
                         candidateMasks[i] = allOnes & ~colidingNumbers;
                     }
