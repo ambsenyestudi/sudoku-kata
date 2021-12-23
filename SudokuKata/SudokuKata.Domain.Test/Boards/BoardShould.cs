@@ -32,12 +32,40 @@ namespace SudokuKata.Domain.Test
         }
 
         [Fact]
-        public void PaintSate()
+        public void PaintCompletedBoardFormState()
         {
             var solvedBoard = Board.PaintState(STATE);
             var expectedDisplay = new string[]{
                 "+---+---+---+",
                 "|123|456|789|",
+                "|456|789|123|",
+                "|789|123|456|",
+                "+---+---+---+",
+                "|231|674|895|",
+                "|875|912|364|",
+                "|694|538|217|",
+                "+---+---+---+",
+                "|317|265|948|",
+                "|542|897|631|",
+                "|968|341|572|",
+                "+---+---+---+",
+            };
+            var actualDisplay = solvedBoard.Select(x => new string(x)).ToArray();
+            Assert.Equal(expectedDisplay, actualDisplay);
+        }
+        [Fact]
+        public void PaintHiddendSqueresInBoardFromState()
+        {
+            
+            var myState = new int [9 * 9];
+            Array.Copy(STATE, myState, myState.Length);
+            myState[0] = 0;
+            myState[1] = 0;
+            myState[2] = 0;
+            var solvedBoard = Board.PaintState(myState);
+            var expectedDisplay = new string[]{
+                "+---+---+---+",
+                "|...|456|789|",
                 "|456|789|123|",
                 "|789|123|456|",
                 "+---+---+---+",

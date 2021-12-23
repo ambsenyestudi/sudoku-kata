@@ -224,12 +224,14 @@ namespace SudokuKata.Domain.Boards
             {
                 var pos = new BoardPosition(i);
                 var (displayRow, displayCol) = pos.ToRowCol();
-                boardDisplay[displayRow][displayCol] = NumberAsChar(state[i]);
+                boardDisplay[displayRow][displayCol] = StateToDisplaySquare(state[i]);
             }
             return boardDisplay;
         }
-        private static char NumberAsChar(int i) =>
-            ("" + i).ToCharArray()[0];
+        private static char StateToDisplaySquare(int i) =>
+            i > 0
+            ? ("" + i).ToCharArray()[0]
+            : '.';
         private static char[][] CreateEmptyBoardDisplay()
         {
             return new char[][]
