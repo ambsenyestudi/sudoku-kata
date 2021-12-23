@@ -10,7 +10,7 @@
             Y = ToColumn(i, nCols);
         }
 
-        public (int,int) ToRowCol() =>
+        public (int,int) ToDisplayRowCol() =>
             (ToDisplayCoordinates(X), ToDisplayCoordinates(Y));
 
         public (int, int) ToBlockCoordinates(int blockSize = 3) =>

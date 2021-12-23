@@ -185,14 +185,12 @@ namespace SudokuKata.Domain.Boards
                 //generate random index
                 int indexToPick = removedPos + randomService.Next(curRemainingDigits);
 
-                //traansform to board coordenates
-                int row = positions[indexToPick] / 9;
-                int col = positions[indexToPick] % 9;
+                var pos = new BoardPosition(positions[indexToPick]);
 
                 //what block it operates on
-                int blockRowToRemove = row / 3;
-                int blockColToRemove = col / 3;
-                if(CanRemoveFromBlock(removedPerBlock, positions[indexToPick], maxRemovedPerBlock))
+                int blockRowToRemove = pos.X / 3;
+                int blockColToRemove = pos.Y / 3;
+                if(CanRemoveFromBlock(removedPerBlock, pos, maxRemovedPerBlock))
                 {
                     removedPerBlock[blockRowToRemove, blockColToRemove] += 1;
 
@@ -200,13 +198,12 @@ namespace SudokuKata.Domain.Boards
                     int temp = positions[removedPos];
                     positions[removedPos] = positions[indexToPick];
                     positions[indexToPick] = temp;
-                    
-                    int rowToWrite = row + row / 3 + 1;
-                    int colToWrite = col + col / 3 + 1;
+
+                    var (rowToWrite, colToWrite) = pos.ToDisplayRowCol();
 
                     squares[rowToWrite][colToWrite] = '.';
 
-                    int stateIndex = 9 * row + col;
+                    int stateIndex = 9 * pos.X + pos.Y;
                     state[stateIndex] = 0;
 
                     removedPos += 1;
@@ -215,9 +212,8 @@ namespace SudokuKata.Domain.Boards
             return squares;
         }
 
-        public bool CanRemoveFromBlock(int[,] removedPerBlock, int index, int maxRemovedPerBlock)
+        public bool CanRemoveFromBlock(int[,] removedPerBlock, BoardPosition pos, int maxRemovedPerBlock)
         {
-            var pos = new BoardPosition(index);
             var (blockRowToRemove, blockColToRemove) = pos.ToBlockCoordinates(3);
             return !(removedPerBlock[blockRowToRemove, blockColToRemove] >= maxRemovedPerBlock);
         }
@@ -236,7 +232,7 @@ namespace SudokuKata.Domain.Boards
             for (int i = 0; i < max; i++)
             {
                 var pos = new BoardPosition(i);
-                var (displayRow, displayCol) = pos.ToRowCol();
+                var (displayRow, displayCol) = pos.ToDisplayRowCol();
                 boardDisplay[displayRow][displayCol] = StateToDisplaySquare(state[i]);
             }
             return boardDisplay;
