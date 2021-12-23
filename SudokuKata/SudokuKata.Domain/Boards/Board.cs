@@ -216,6 +216,14 @@ namespace SudokuKata.Domain.Boards
             }
             return squares;
         }
+
+        public int[] GenerateInitialState(int[] state, IRandomService randomService)
+        {
+            var initialSate = new int[state.Length];
+            Array.Copy(state, initialSate, initialSate.Length);
+            return initialSate;
+        }
+
         public static char[][] PaintState(int[] state)
         {
             var boardDisplay = CreateEmptyBoardDisplay();
