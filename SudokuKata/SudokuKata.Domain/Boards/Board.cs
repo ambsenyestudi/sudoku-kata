@@ -216,6 +216,20 @@ namespace SudokuKata.Domain.Boards
             }
             return squares;
         }
+        public static char[][] PaintState(int[] state)
+        {
+            var boardDisplay = CreateEmptyBoardDisplay();
+            int max = 9 * 9;
+            for (int i = 0; i < max; i++)
+            {
+                var pos = new BoardPosition(i);
+                var (displayRow, displayCol) = pos.ToRowCol();
+                boardDisplay[displayRow][displayCol] = NumberAsChar(state[i]);
+            }
+            return boardDisplay;
+        }
+        private static char NumberAsChar(int i) =>
+            ("" + i).ToCharArray()[0];
         private static char[][] CreateEmptyBoardDisplay()
         {
             return new char[][]
