@@ -188,11 +188,8 @@ namespace SudokuKata.Domain.Boards
                 var pos = new BoardPosition(positions[indexToPick]);
 
                 //what block it operates on
-                int blockRowToRemove = pos.X / 3;
-                int blockColToRemove = pos.Y / 3;
-                if(CanRemoveFromBlock(removedPerBlock, pos, maxRemovedPerBlock))
+                if(TryUpdateBlock(removedPerBlock, pos, maxRemovedPerBlock))
                 {
-                    removedPerBlock[blockRowToRemove, blockColToRemove] += 1;
 
                     //shits arround the current index value and the new value chosen for removal
                     int temp = positions[removedPos];
@@ -212,10 +209,15 @@ namespace SudokuKata.Domain.Boards
             return squares;
         }
 
-        public bool CanRemoveFromBlock(int[,] removedPerBlock, BoardPosition pos, int maxRemovedPerBlock)
+        public bool TryUpdateBlock(int[,] removedPerBlock, BoardPosition pos, int maxRemovedPerBlock)
         {
             var (blockRowToRemove, blockColToRemove) = pos.ToBlockCoordinates(3);
-            return !(removedPerBlock[blockRowToRemove, blockColToRemove] >= maxRemovedPerBlock);
+            if(removedPerBlock[blockRowToRemove, blockColToRemove] >= maxRemovedPerBlock)
+            {
+                return false;
+            }
+            removedPerBlock[blockRowToRemove, blockColToRemove] += 1;
+            return true;
         }
 
         public int[] GenerateInitialState(int[] state, IRandomService randomService)
