@@ -13,6 +13,8 @@
         public (int,int) ToRowCol() =>
             (ToDisplayCoordinates(X), ToDisplayCoordinates(Y));
 
+        public (int, int) ToBlockCoordinates(int blockSize = 3) =>
+            (X / blockSize, Y / blockSize);
 
         public static int ToRow(int i, int nRows) =>
             i / nRows;

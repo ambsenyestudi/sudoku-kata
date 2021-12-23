@@ -176,7 +176,7 @@ namespace SudokuKata.Domain.Boards
             int[] positions = Enumerable.Range(0, 9 * 9).ToArray();
          
             
-            //shift squares around until you get 30 removed squares
+            //shift squares around until only 30 squares left and max 6 digits missing per block
             int removedPos = 0;
             while (removedPos < 9 * 9 - remainingDigits)
             {
@@ -192,29 +192,34 @@ namespace SudokuKata.Domain.Boards
                 //what block it operates on
                 int blockRowToRemove = row / 3;
                 int blockColToRemove = col / 3;
+                if(CanRemoveFromBlock(removedPerBlock, positions[indexToPick], maxRemovedPerBlock))
+                {
+                    removedPerBlock[blockRowToRemove, blockColToRemove] += 1;
 
-                //ensure that enought squares are left for the user to play
-                if (removedPerBlock[blockRowToRemove, blockColToRemove] >= maxRemovedPerBlock)
-                    continue;
-                //keep count of blocks removed
-                removedPerBlock[blockRowToRemove, blockColToRemove] += 1;
+                    //shits arround the current index value and the new value chosen for removal
+                    int temp = positions[removedPos];
+                    positions[removedPos] = positions[indexToPick];
+                    positions[indexToPick] = temp;
+                    
+                    int rowToWrite = row + row / 3 + 1;
+                    int colToWrite = col + col / 3 + 1;
 
-                //shits arround the current index value and the new value chosen for removal
-                int temp = positions[removedPos];
-                positions[removedPos] = positions[indexToPick];
-                positions[indexToPick] = temp;
-                
-                int rowToWrite = row + row / 3 + 1;
-                int colToWrite = col + col / 3 + 1;
+                    squares[rowToWrite][colToWrite] = '.';
 
-                squares[rowToWrite][colToWrite] = '.';
-                
-                int stateIndex = 9 * row + col;
-                state[stateIndex] = 0;
+                    int stateIndex = 9 * row + col;
+                    state[stateIndex] = 0;
 
-                removedPos += 1;
+                    removedPos += 1;
+                }
             }
             return squares;
+        }
+
+        public bool CanRemoveFromBlock(int[,] removedPerBlock, int index, int maxRemovedPerBlock)
+        {
+            var pos = new BoardPosition(index);
+            var (blockRowToRemove, blockColToRemove) = pos.ToBlockCoordinates(3);
+            return !(removedPerBlock[blockRowToRemove, blockColToRemove] >= maxRemovedPerBlock);
         }
 
         public int[] GenerateInitialState(int[] state, IRandomService randomService)
