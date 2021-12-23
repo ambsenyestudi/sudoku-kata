@@ -56,7 +56,8 @@ namespace SudokuKata
             // this is the solved game
             int[] state = stateStack.Peek();
             int[] finalState = new int[state.Length];
-            board = gameBoard.GenerateInitialBoardFrom(state, finalState, board, stateStack, randomService);
+            Array.Copy(state, finalState, finalState.Length);
+            board = gameBoard.GenerateInitialBoardFrom(state, board, randomService);
             output.Add(string.Empty);
             output.Add("Starting look of the board to solve:");
             output.Add(

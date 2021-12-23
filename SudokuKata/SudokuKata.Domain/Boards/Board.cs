@@ -13,23 +13,8 @@ namespace SudokuKata.Domain.Boards
 
         public Board()
         {
-            
-            Squares = new char[][]
-            {
-                LINE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                LINE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                LINE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                LINE.ToCharArray()
-            };
+
+            Squares = CreateEmptyBoardDisplay();
         }
 
         public char[][] ConstructFullyPopulatedBoard(
@@ -41,22 +26,7 @@ namespace SudokuKata.Domain.Boards
             Stack<bool[]> usedDigitsStack,
             Stack<int> lastDigitStack)
         {
-            var squares = new char[][]
-            {
-                LINE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                LINE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                LINE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                MIDDLE.ToCharArray(),
-                LINE.ToCharArray()
-            };
+            char[][] squares = CreateEmptyBoardDisplay();
             while (stateStack.Count <= 9 * 9)
             {
                 if (command == "expand")
@@ -194,51 +164,76 @@ namespace SudokuKata.Domain.Boards
             }
             return squares;
         }
+
+
         public char[][] GenerateInitialBoardFrom(int[] state,
-            int[] finalState,
             char[][] squares,
-            Stack<int[]> stateStack,
             IRandomService randomService)
         {
             int remainingDigits = 30;
             int maxRemovedPerBlock = 6;
             int[,] removedPerBlock = new int[3, 3];
             int[] positions = Enumerable.Range(0, 9 * 9).ToArray();
-
-            Array.Copy(state, finalState, finalState.Length);
-
+         
+            
+            //shift squares around until you get 30 removed squares
             int removedPos = 0;
             while (removedPos < 9 * 9 - remainingDigits)
             {
+                //stores the total amount of removed digits
                 int curRemainingDigits = positions.Length - removedPos;
+                //generate random index
                 int indexToPick = removedPos + randomService.Next(curRemainingDigits);
 
+                //traansform to board coordenates
                 int row = positions[indexToPick] / 9;
                 int col = positions[indexToPick] % 9;
 
+                //what block it operates on
                 int blockRowToRemove = row / 3;
                 int blockColToRemove = col / 3;
 
+                //ensure that enought squares are left for the user to play
                 if (removedPerBlock[blockRowToRemove, blockColToRemove] >= maxRemovedPerBlock)
                     continue;
-
+                //keep count of blocks removed
                 removedPerBlock[blockRowToRemove, blockColToRemove] += 1;
 
+                //shits arround the current index value and the new value chosen for removal
                 int temp = positions[removedPos];
                 positions[removedPos] = positions[indexToPick];
                 positions[indexToPick] = temp;
-
+                
                 int rowToWrite = row + row / 3 + 1;
                 int colToWrite = col + col / 3 + 1;
 
                 squares[rowToWrite][colToWrite] = '.';
-
+                
                 int stateIndex = 9 * row + col;
                 state[stateIndex] = 0;
 
                 removedPos += 1;
             }
             return squares;
+        }
+        private static char[][] CreateEmptyBoardDisplay()
+        {
+            return new char[][]
+            {
+                LINE.ToCharArray(),
+                MIDDLE.ToCharArray(),
+                MIDDLE.ToCharArray(),
+                MIDDLE.ToCharArray(),
+                LINE.ToCharArray(),
+                MIDDLE.ToCharArray(),
+                MIDDLE.ToCharArray(),
+                MIDDLE.ToCharArray(),
+                LINE.ToCharArray(),
+                MIDDLE.ToCharArray(),
+                MIDDLE.ToCharArray(),
+                MIDDLE.ToCharArray(),
+                LINE.ToCharArray()
+            };
         }
     }
 }
